@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Đăng nhập Game Poker Texas Hold'em">
+  <title>Đăng nhập - Poker Game</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <!-- Header -->
+      <div class="auth-header">
+        <div class="auth-logo">
+          <img src="static/img/logo.png" alt="Poker Logo" class="logo-img">
+        </div>
+        <h1 class="auth-title">Chào mừng trở lại</h1>
+        <p class="auth-subtitle">Đăng nhập để tiếp tục chơi poker</p>
+      </div>
+
+      <!-- Alert Messages (Hidden by default) -->
+      <div id="alertContainer"></div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="auth-form" novalidate>
+        <!-- Username -->
+        <div class="form-group">
+          <label for="username" class="form-label">
+            <i class="fa-solid fa-user"></i>
+            Tên đăng nhập
+          </label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="username" 
+            name="username"
+            placeholder="Nhập tên đăng nhập"
+            required
+            autocomplete="username"
+          >
+          <div class="invalid-feedback">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            Vui lòng nhập tên đăng nhập
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password" class="form-label">
+            <i class="fa-solid fa-lock"></i>
+            Mật khẩu
+          </label>
+          <div class="password-group">
+            <input 
+              type="password" 
+              class="form-control" 
+              id="password" 
+              name="password"
+              placeholder="Nhập mật khẩu"
+              required
+              autocomplete="current-password"
+            >
+            <button type="button" class="password-toggle" onclick="togglePassword('password')">
+              <i class="fa-solid fa-eye" id="password-icon"></i>
+            </button>
+          </div>
+          <div class="invalid-feedback">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            Vui lòng nhập mật khẩu
+          </div>
+        </div>
+
+        <!-- Remember Me & Forgot Password -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div class="form-check">
+            <input 
+              type="checkbox" 
+              id="rememberMe" 
+              name="rememberMe"
+            >
+            <label for="rememberMe">
+              Ghi nhớ đăng nhập
+            </label>
+          </div>
+          <a href="#" class="text-muted" style="font-size: var(--font-size-sm); text-decoration: none;">
+            Quên mật khẩu?
+          </a>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-auth btn-primary">
+          <span class="spinner"></span>
+          <span class="btn-text">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            Đăng nhập
+          </span>
+        </button>
+      </form>
+
+      <!-- Divider -->
+      <div class="auth-divider">
+        <span>Hoặc</span>
+      </div>
+
+      <!-- Quick Login (Demo Accounts) -->
+      <div class="mb-3">
+        <button type="button" class="btn-auth btn-secondary" onclick="quickLogin()">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Đăng nhập nhanh (Demo)</span>
+        </button>
+      </div>
+
+      <!-- Signup Link -->
+      <div class="auth-link">
+        <p>Chưa có tài khoản?</p>
+        <a href="signup.html">
+          <i class="fa-solid fa-user-plus"></i>
+          Đăng ký ngay
+        </a>
+      </div>
+
+      <!-- Game Info -->
+      <div style="margin-top: var(--spacing-xl); text-align: center; padding-top: var(--spacing-lg); border-top: 1px solid rgba(113, 90, 90, 0.3);">
+        <p style="color: var(--color-text-muted); font-size: var(--font-size-xs); margin: 0;">
+          <i class="fa-solid fa-info-circle"></i>
+          Tài khoản mới nhận <span style="color: var(--color-warning); font-weight: bold;">$100</span> miễn phí
+        </p>
+        <p style="color: var(--color-text-muted); font-size: var(--font-size-xs); margin: 0;">
+          <i class="fa-solid fa-gift"></i>
+          Điểm danh hàng ngày nhận thêm <span style="color: var(--color-success); font-weight: bold;">$50</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Login Script -->
+  <script type="module">
+    import { loginUser, getUserSession, setUserSession } from './js/storage/userStorage.js';
+    import { initializeBots, isBotsInitialized } from './js/storage/botStorage.js';
+    // Toggle Password Visibility
+    function togglePassword(inputId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(`${inputId}-icon`);
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    // Show Alert
+    function showAlert(message, type = 'danger') {
+      const alertContainer = document.getElementById('alertContainer');
+      const iconMap = {
+        success: 'fa-circle-check',
+        danger: 'fa-circle-exclamation',
+        warning: 'fa-triangle-exclamation'
+      };
+      
+      alertContainer.innerHTML = `
+        <div class="alert alert-${type}">
+          <i class="fa-solid ${iconMap[type]}"></i>
+          <span>${message}</span>
+        </div>
+      `;
+      
+      // Auto hide after 5 seconds
+      setTimeout(() => {
+        alertContainer.innerHTML = '';
+      }, 5000);
+    }
+
+    // Check if user is already logged in
+    window.addEventListener('DOMContentLoaded', () => {
+      const session = getUserSession();
+      if (session) {
+        // User already logged in, redirect to game
+        window.location.href = 'game.html';
+      }
+    });
+
+    // Quick Login (Demo)
+    async function quickLogin() {
+      // Initialize bots if not initialized
+      if (!isBotsInitialized()) {
+        console.log('Initializing bots...');
+        await initializeBots();
+      }
+
+      const result = loginUser('DemoPlayer', 'demo123');
+      
+      if (!result.success) {
+        // Create demo account using userStorage
+        const { createUser } = await import('./js/storage/userStorage.js');
+        const createResult = createUser({
+          username: 'DemoPlayer',
+          email: 'demo@poker.com',
+          password: 'demo123',
+          balance: 100
+        });
+
+        if (createResult.success) {
+          setUserSession(createResult.user);
+          showAlert('Đã tạo tài khoản demo! Đang chuyển hướng...', 'success');
+          setTimeout(() => {
+            window.location.href = 'game.html';
+          }, 1500);
+        }
+      } else {
+        showAlert('Đăng nhập demo thành công! Đang chuyển hướng...', 'success');
+        setTimeout(() => {
+          window.location.href = 'game.html';
+        }, 1500);
+      }
+    }
+
+    // Make quickLogin available globally
+    window.quickLogin = quickLogin;
+
+    // Form Validation
+    const form = document.getElementById('loginForm');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const rememberMeCheckbox = document.getElementById('rememberMe');
+
+    function validateField(field) {
+      if (field.value.trim() === '') {
+        field.classList.add('is-invalid');
+        return false;
+      } else {
+        field.classList.remove('is-invalid');
+        return true;
+      }
+    }
+
+    // Real-time validation
+    usernameInput.addEventListener('input', () => {
+      validateField(usernameInput);
+    });
+
+    passwordInput.addEventListener('input', () => {
+      validateField(passwordInput);
+    });
+
+    // Form Submit
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Validate fields
+      const isUsernameValid = validateField(usernameInput);
+      const isPasswordValid = validateField(passwordInput);
+
+      if (!isUsernameValid || !isPasswordValid) {
+        showAlert('Vui lòng điền đầy đủ thông tin', 'danger');
+        return;
+      }
+
+      // Show loading state
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.classList.add('loading');
+      submitBtn.disabled = true;
+
+      // Login using userStorage
+      setTimeout(async () => {
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+
+        // Initialize bots on first login
+        if (!isBotsInitialized()) {
+          console.log('First login detected! Initializing bots from JSON...');
+          try {
+            const bots = await initializeBots();
+            console.log(`${bots.length} bots initialized successfully`);
+          } catch (error) {
+            console.error('Failed to initialize bots:', error);
+          }
+        }
+
+        // Login
+        const result = loginUser(username, password);
+
+        if (result.success) {
+          // Remember me
+          if (rememberMeCheckbox.checked) {
+            localStorage.setItem('poker_rememberMe', 'true');
+          }
+
+          showAlert('Đăng nhập thành công! Đang chuyển hướng...', 'success');
+          
+          // Redirect to game
+          setTimeout(() => {
+            window.location.href = 'game.html';
+          }, 1500);
+        } else {
+          // Failed
+          showAlert(result.error, 'danger');
+          submitBtn.classList.remove('loading');
+          submitBtn.disabled = false;
+          
+          // Shake animation
+          form.classList.add('shake');
+          setTimeout(() => {
+            form.classList.remove('shake');
+          }, 500);
+        }
+      }, 1000);
+    });
+
+    // Shake animation CSS
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+      }
+      .shake {
+        animation: shake 0.5s;
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>

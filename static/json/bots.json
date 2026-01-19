@@ -1,0 +1,664 @@
+{
+    "bots": [
+        {
+            "id": "bot_001",
+            "name": "Hannah",
+            "gender": "female",
+            "balance": 230,
+            "personality": "balanced",
+            "behaviorWeights": {
+                "fold": 2,
+                "check": 3,
+                "call": 3,
+                "raise": 2,
+                "allin": 1
+            },
+            "stats": {
+                "gamesPlayed": 104,
+                "wins": 36,
+                "losses": 68,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_002",
+            "name": "Marco",
+            "gender": "male",
+            "balance": 180,
+            "personality": "tight",
+            "behaviorWeights": {
+                "fold": 4,
+                "check": 3,
+                "call": 2,
+                "raise": 1,
+                "allin": 0
+            },
+            "stats": {
+                "gamesPlayed": 120,
+                "wins": 38,
+                "losses": 82,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_003",
+            "name": "Anna",
+            "gender": "female",
+            "balance": 220,
+            "personality": "passive",
+            "behaviorWeights": {
+                "fold": 2,
+                "check": 5,
+                "call": 3,
+                "raise": 1,
+                "allin": 0
+            },
+            "stats": {
+                "gamesPlayed": 88,
+                "wins": 26,
+                "losses": 62,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_004",
+            "name": "Victor",
+            "gender": "male",
+            "balance": 310,
+            "personality": "aggressive",
+            "behaviorWeights": {
+                "fold": 1,
+                "check": 1,
+                "call": 2,
+                "raise": 5,
+                "allin": 4
+            },
+            "stats": {
+                "gamesPlayed": 140,
+                "wins": 55,
+                "losses": 85,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_005",
+            "name": "Nina",
+            "gender": "female",
+            "balance": 165,
+            "personality": "tight",
+            "behaviorWeights": {
+                "fold": 5,
+                "check": 3,
+                "call": 1,
+                "raise": 1,
+                "allin": 0
+            },
+            "stats": {
+                "gamesPlayed": 70,
+                "wins": 18,
+                "losses": 52,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_006",
+            "name": "Hector",
+            "gender": "male",
+            "balance": 400,
+            "personality": "loose",
+            "behaviorWeights": {
+                "fold": 1,
+                "check": 2,
+                "call": 4,
+                "raise": 4,
+                "allin": 2
+            },
+            "stats": {
+                "gamesPlayed": 200,
+                "wins": 78,
+                "losses": 122,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_007",
+            "name": "Sara",
+            "gender": "female",
+            "balance": 195,
+            "personality": "balanced",
+            "behaviorWeights": {
+                "fold": 2,
+                "check": 3,
+                "call": 3,
+                "raise": 2,
+                "allin": 1
+            },
+            "stats": {
+                "gamesPlayed": 110,
+                "wins": 40,
+                "losses": 70,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_008",
+            "name": "Daniel",
+            "gender": "male",
+            "balance": 260,
+            "personality": "passive",
+            "behaviorWeights": {
+                "fold": 2,
+                "check": 5,
+                "call": 2,
+                "raise": 1,
+                "allin": 0
+            },
+            "stats": {
+                "gamesPlayed": 95,
+                "wins": 29,
+                "losses": 66,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_009",
+            "name": "Elena",
+            "gender": "female",
+            "balance": 340,
+            "personality": "aggressive",
+            "behaviorWeights": {
+                "fold": 1,
+                "check": 1,
+                "call": 2,
+                "raise": 6,
+                "allin": 3
+            },
+            "stats": {
+                "gamesPlayed": 160,
+                "wins": 64,
+                "losses": 96,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_010",
+            "name": "Tom",
+            "gender": "male",
+            "balance": 120,
+            "personality": "careless",
+            "behaviorWeights": {
+                "fold": 1,
+                "check": 1,
+                "call": 2,
+                "raise": 3,
+                "allin": 5
+            },
+            "stats": {
+                "gamesPlayed": 60,
+                "wins": 14,
+                "losses": 46,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_011",
+            "name": "Paul",
+            "gender": "male",
+            "balance": 280,
+            "personality": "balanced",
+            "behaviorWeights": {
+                "fold": 2,
+                "check": 3,
+                "call": 3,
+                "raise": 2,
+                "allin": 1
+            },
+            "stats": {
+                "gamesPlayed": 130,
+                "wins": 48,
+                "losses": 82,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_012",
+            "name": "Mila",
+            "gender": "female",
+            "balance": 210,
+            "personality": "loose",
+            "behaviorWeights": {
+                "fold": 1,
+                "check": 2,
+                "call": 4,
+                "raise": 3,
+                "allin": 2
+            },
+            "stats": {
+                "gamesPlayed": 100,
+                "wins": 36,
+                "losses": 64,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_013",
+            "name": "Igor",
+            "gender": "male",
+            "balance": 500,
+            "personality": "tight-aggressive",
+            "behaviorWeights": {
+                "fold": 3,
+                "check": 2,
+                "call": 2,
+                "raise": 4,
+                "allin": 2
+            },
+            "stats": {
+                "gamesPlayed": 220,
+                "wins": 92,
+                "losses": 128,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_014",
+            "name": "Julia",
+            "gender": "female",
+            "balance": 155,
+            "personality": "passive",
+            "behaviorWeights": {
+                "fold": 3,
+                "check": 4,
+                "call": 2,
+                "raise": 1,
+                "allin": 0
+            },
+            "stats": {
+                "gamesPlayed": 75,
+                "wins": 22,
+                "losses": 53,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_015",
+            "name": "Ken",
+            "gender": "male",
+            "balance": 330,
+            "personality": "aggressive",
+            "behaviorWeights": {
+                "fold": 1,
+                "check": 1,
+                "call": 2,
+                "raise": 5,
+                "allin": 4
+            },
+            "stats": {
+                "gamesPlayed": 150,
+                "wins": 61,
+                "losses": 89,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_016",
+            "name": "Lara",
+            "gender": "female",
+            "balance": 190,
+            "personality": "balanced",
+            "behaviorWeights": {
+                "fold": 2,
+                "check": 3,
+                "call": 3,
+                "raise": 2,
+                "allin": 1
+            },
+            "stats": {
+                "gamesPlayed": 105,
+                "wins": 37,
+                "losses": 68,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_017",
+            "name": "Oscar",
+            "gender": "male",
+            "balance": 90,
+            "personality": "reckless",
+            "behaviorWeights": {
+                "fold": 0,
+                "check": 1,
+                "call": 1,
+                "raise": 2,
+                "allin": 6
+            },
+            "stats": {
+                "gamesPlayed": 40,
+                "wins": 9,
+                "losses": 31,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_018",
+            "name": "Sophia",
+            "gender": "female",
+            "balance": 360,
+            "personality": "tight",
+            "behaviorWeights": {
+                "fold": 4,
+                "check": 3,
+                "call": 2,
+                "raise": 1,
+                "allin": 0
+            },
+            "stats": {
+                "gamesPlayed": 140,
+                "wins": 50,
+                "losses": 90,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_019",
+            "name": "Bruno",
+            "gender": "male",
+            "balance": 275,
+            "personality": "loose",
+            "behaviorWeights": {
+                "fold": 1,
+                "check": 2,
+                "call": 4,
+                "raise": 3,
+                "allin": 2
+            },
+            "stats": {
+                "gamesPlayed": 115,
+                "wins": 41,
+                "losses": 74,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_020",
+            "name": "Yuki",
+            "gender": "female",
+            "balance": 420,
+            "personality": "tight-aggressive",
+            "behaviorWeights": {
+                "fold": 3,
+                "check": 2,
+                "call": 2,
+                "raise": 4,
+                "allin": 3
+            },
+            "stats": {
+                "gamesPlayed": 180,
+                "wins": 74,
+                "losses": 106,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_021",
+            "name": "Alex",
+            "gender": "male",
+            "balance": 240,
+            "personality": "balanced",
+            "behaviorWeights": {
+                "fold": 2,
+                "check": 3,
+                "call": 3,
+                "raise": 2,
+                "allin": 1
+            },
+            "stats": {
+                "gamesPlayed": 100,
+                "wins": 35,
+                "losses": 65,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_022",
+            "name": "Mason",
+            "gender": "male",
+            "balance": 310,
+            "personality": "aggressive",
+            "behaviorWeights": {
+                "fold": 1,
+                "check": 1,
+                "call": 2,
+                "raise": 5,
+                "allin": 3
+            },
+            "stats": {
+                "gamesPlayed": 145,
+                "wins": 58,
+                "losses": 87,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_023",
+            "name": "Ivy",
+            "gender": "female",
+            "balance": 170,
+            "personality": "passive",
+            "behaviorWeights": {
+                "fold": 3,
+                "check": 4,
+                "call": 2,
+                "raise": 1,
+                "allin": 0
+            },
+            "stats": {
+                "gamesPlayed": 82,
+                "wins": 25,
+                "losses": 57,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_024",
+            "name": "Rafael",
+            "gender": "male",
+            "balance": 380,
+            "personality": "loose-aggressive",
+            "behaviorWeights": {
+                "fold": 1,
+                "check": 1,
+                "call": 3,
+                "raise": 5,
+                "allin": 3
+            },
+            "stats": {
+                "gamesPlayed": 165,
+                "wins": 69,
+                "losses": 96,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_025",
+            "name": "Clara",
+            "gender": "female",
+            "balance": 205,
+            "personality": "balanced",
+            "behaviorWeights": {
+                "fold": 2,
+                "check": 3,
+                "call": 3,
+                "raise": 2,
+                "allin": 1
+            },
+            "stats": {
+                "gamesPlayed": 98,
+                "wins": 34,
+                "losses": 64,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_026",
+            "name": "Noah",
+            "gender": "male",
+            "balance": 145,
+            "personality": "tight",
+            "behaviorWeights": {
+                "fold": 5,
+                "check": 3,
+                "call": 1,
+                "raise": 1,
+                "allin": 0
+            },
+            "stats": {
+                "gamesPlayed": 68,
+                "wins": 19,
+                "losses": 49,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_027",
+            "name": "Vera",
+            "gender": "female",
+            "balance": 295,
+            "personality": "loose",
+            "behaviorWeights": {
+                "fold": 1,
+                "check": 2,
+                "call": 4,
+                "raise": 3,
+                "allin": 2
+            },
+            "stats": {
+                "gamesPlayed": 118,
+                "wins": 43,
+                "losses": 75,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_028",
+            "name": "Leon",
+            "gender": "male",
+            "balance": 450,
+            "personality": "tight-aggressive",
+            "behaviorWeights": {
+                "fold": 3,
+                "check": 2,
+                "call": 2,
+                "raise": 4,
+                "allin": 3
+            },
+            "stats": {
+                "gamesPlayed": 190,
+                "wins": 81,
+                "losses": 109,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_029",
+            "name": "Emily",
+            "gender": "female",
+            "balance": 160,
+            "personality": "passive",
+            "behaviorWeights": {
+                "fold": 3,
+                "check": 4,
+                "call": 2,
+                "raise": 1,
+                "allin": 0
+            },
+            "stats": {
+                "gamesPlayed": 72,
+                "wins": 21,
+                "losses": 51,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        },
+        {
+            "id": "bot_030",
+            "name": "Diego",
+            "gender": "male",
+            "balance": 360,
+            "personality": "loose-aggressive",
+            "behaviorWeights": {
+                "fold": 1,
+                "check": 1,
+                "call": 3,
+                "raise": 5,
+                "allin": 3
+            },
+            "stats": {
+                "gamesPlayed": 155,
+                "wins": 67,
+                "losses": 88,
+                "totalWinnings": 0,
+                "totalLosses": 0,
+                "biggestPot": 0
+            }
+        }
+    ]
+}
