@@ -1,6 +1,6 @@
 /**
  * Poker Game Logic
- * Basic initialization and UI control
+ * Complete game integration with UI
  */
 
 // Import bot storage
@@ -9,6 +9,21 @@ import {
   getRandomBots,
   isBotsInitialized 
 } from './storage/botStorage.js';
+
+// Import core modules
+import { Player } from './core/player.js';
+import { PokerGame, GAME_STATE, ACTIONS } from './core/gameLogic.js';
+import { evaluateHand, determineWinners } from './core/handEvaluator.js';
+import { botActionWithDelay } from './bot/botAI.js';
+import { GameUI } from './ui/gameUI.js';
+
+// ============================================
+// GAME INSTANCE
+// ============================================
+
+let pokerGame = null;
+let gameUI = null;
+let currentUser = null;
 
 // ============================================
 // LOADING & MATCHING
@@ -111,6 +126,9 @@ function hideLoadingOverlay() {
   
   // Render bots into seats
   renderBots();
+  
+  // Initialize poker game
+  initializePokerGame();
 }
 
 /**
@@ -221,6 +239,9 @@ function initPokerGame() {
   
   if (!user) return;
   
+  // Save current user
+  currentUser = user;
+  
   // Start matching simulation
   simulateMatching();
   
@@ -271,11 +292,11 @@ function setupEventListeners() {
   const btnRaise = document.querySelector('.btn-raise');
   const btnAllin = document.querySelector('.btn-allin');
   
-  if (btnFold) btnFold.addEventListener('click', () => handleAction('fold'));
-  if (btnCheck) btnCheck.addEventListener('click', () => handleAction('check'));
-  if (btnCall) btnCall.addEventListener('click', () => handleAction('call'));
-  if (btnRaise) btnRaise.addEventListener('click', () => handleAction('raise'));
-  if (btnAllin) btnAllin.addEventListener('click', () => handleAction('allin'));
+  if (btnFold) btnFold.addEventListener('click', () => handleAction(ACTIONS.FOLD));
+  if (btnCheck) btnCheck.addEventListener('click', () => handleAction(ACTIONS.CHECK));
+  if (btnCall) btnCall.addEventListener('click', () => handleAction(ACTIONS.CALL));
+  if (btnRaise) btnRaise.addEventListener('click', () => handleAction(ACTIONS.RAISE));
+  if (btnAllin) btnAllin.addEventListener('click', () => handleAction(ACTIONS.ALL_IN));
   
   // Bet slider
   const betSlider = document.querySelector('.bet-slider');
@@ -307,12 +328,312 @@ function handleLeaveTable() {
 }
 
 // Handle player actions
-function handleAction(action) {
-  console.log('Player action:', action);
+async function handleAction(action) {
+  if (!pokerGame || !gameUI) return;
   
-  // TODO: Implement game logic for each action
+  const currentPlayer = pokerGame.getCurrentPlayer();
   
-  alert(`Action "${action}" chưa được triển khai. Đây là UI demo.`);
+  // Ensure it's player's turn
+  if (currentPlayer.id !== 'player') {
+    console.warn('Not your turn!');
+    return;
+  }
+  
+  let amount = 0;
+  
+  // Get raise amount if needed
+  if (action === ACTIONS.RAISE) {
+    const betSlider = document.querySelector('.bet-slider');
+    amount = betSlider ? parseInt(betSlider.value) : pokerGame.minRaise;
+  }
+  
+  // Apply action
+  const success = pokerGame.applyAction(currentPlayer, action, amount);
+  
+  if (success) {
+    // Update UI
+    gameUI.updatePlayerSeat(currentPlayer, 5);
+    gameUI.updatePot(pokerGame.pot);
+    gameUI.disableActionButtons();
+    
+    // Move to next player
+    pokerGame.nextPlayer();
+    
+    // Continue game loop
+    await gameLoop();
+  }
+}
+
+// ============================================
+// POKER GAME INITIALIZATION
+// ============================================
+
+/**
+ * Initialize poker game with players
+ */
+function initializePokerGame() {
+  if (!currentUser || selectedBots.length === 0) {
+    console.error('Cannot initialize game: missing user or bots');
+    return;
+  }
+  
+  console.log('\n🎮 === Initializing Poker Game ===');
+  
+  // Create players array
+  const players = [];
+  
+  // Add human player (always at position 4 = seat 5)
+  const humanPlayer = new Player(
+    'player',
+    shortenName(currentUser.username),
+    currentUser.balance,
+    false,
+    null
+  );
+  humanPlayer.position = 4;
+  humanPlayer.seatNumber = 5;
+  players.push(humanPlayer);
+  
+  // Add bot players
+  const botSeats = [1, 2, 3, 4, 6, 7, 8]; // Available seats
+  selectedBots.forEach((bot, index) => {
+    if (index >= botSeats.length) return;
+    
+    const seatNumber = botSeats[index];
+    const botPlayer = new Player(
+      bot.id,
+      bot.name,
+      bot.balance,
+      true,
+      bot
+    );
+    botPlayer.position = index < 4 ? index : index + 1; // Skip position 4 (human)
+    botPlayer.seatNumber = seatNumber;
+    players.push(botPlayer);
+  });
+  
+  // Sort players by position
+  players.sort((a, b) => a.position - b.position);
+  
+  console.log(`Players: ${players.length}`);
+  players.forEach(p => console.log(`  - ${p.name} (Seat ${p.seatNumber}): $${p.chips}`));
+  
+  // Create game instance
+  pokerGame = new PokerGame(players, {
+    smallBlind: 5,
+    bigBlind: 10
+  });
+  
+  // Create UI controller
+  gameUI = new GameUI(pokerGame);
+  
+  // Setup event callbacks
+  pokerGame.onStateChange = (state, gameState) => {
+    console.log(`\n📍 State changed: ${state}`);
+    gameUI.updateRoundName(state);
+    gameUI.updateCommunityCards(gameState.communityCards);
+  };
+  
+  pokerGame.onPotUpdate = (pot) => {
+    gameUI.updatePot(pot);
+  };
+  
+  pokerGame.onPlayerAction = (player, action, amount) => {
+    gameUI.showActionMessage(player.name, action, amount);
+    gameUI.updatePlayerSeat(player, player.seatNumber);
+  };
+  
+  console.log('✅ Game initialized successfully');
+  
+  // Start first hand after a delay
+  setTimeout(() => {
+    startNewHand();
+  }, 1000);
+}
+
+/**
+ * Start new hand
+ */
+async function startNewHand() {
+  if (!pokerGame || !gameUI) return;
+  
+  console.log('\n🃏 === Starting New Hand ===');
+  
+  // Reset UI
+  gameUI.resetForNewHand();
+  
+  // Start game
+  const success = pokerGame.startNewHand();
+  
+  if (!success) {
+    console.error('Failed to start hand');
+    return;
+  }
+  
+  // Update all player seats
+  pokerGame.activePlayers.forEach(player => {
+    gameUI.updatePlayerSeat(player, player.seatNumber);
+  });
+  
+  // Update community cards
+  gameUI.updateCommunityCards(pokerGame.communityCards);
+  gameUI.updatePot(pokerGame.pot);
+  gameUI.updateRoundName(pokerGame.state);
+  
+  // Start game loop
+  await gameLoop();
+}
+
+/**
+ * Main game loop
+ */
+async function gameLoop() {
+  if (!pokerGame || !gameUI) return;
+  
+  // Check if betting round is complete
+  if (pokerGame.isBettingRoundComplete()) {
+    console.log('✅ Betting round complete');
+    
+    // Check if game should end early (only 1 player left)
+    if (pokerGame.shouldEndEarly()) {
+      await handleEarlyEnd();
+      return;
+    }
+    
+    // Advance to next state
+    if (pokerGame.state === GAME_STATE.RIVER) {
+      // Go to showdown
+      pokerGame.advanceState();
+      await handleShowdown();
+      return;
+    } else if (pokerGame.state !== GAME_STATE.SHOWDOWN) {
+      // Deal next cards
+      pokerGame.advanceState();
+      
+      // Update UI
+      gameUI.updateCommunityCards(pokerGame.communityCards);
+      gameUI.clearPlayerActions();
+      
+      // Start next betting round
+      setTimeout(() => gameLoop(), 1000);
+      return;
+    }
+  }
+  
+  // Get current player
+  const currentPlayer = pokerGame.getCurrentPlayer();
+  
+  if (!currentPlayer || !currentPlayer.canAct()) {
+    pokerGame.nextPlayer();
+    setTimeout(() => gameLoop(), 100);
+    return;
+  }
+  
+  // Highlight current player
+  gameUI.highlightCurrentPlayer(currentPlayer.seatNumber);
+  
+  // Get valid actions
+  const validActions = pokerGame.getValidActions(currentPlayer);
+  
+  if (validActions.length === 0) {
+    pokerGame.nextPlayer();
+    setTimeout(() => gameLoop(), 100);
+    return;
+  }
+  
+  // If current player is human
+  if (!currentPlayer.isBot) {
+    // Enable action buttons
+    const callAmount = pokerGame.currentBet - currentPlayer.currentBet;
+    gameUI.updateActionButtons(validActions, callAmount);
+    
+    // Wait for player action (handled by handleAction)
+    return;
+  }
+  
+  // If current player is bot
+  const decision = await botActionWithDelay(
+    currentPlayer,
+    validActions,
+    {
+      currentBet: pokerGame.currentBet,
+      minRaise: pokerGame.minRaise,
+      pot: pokerGame.pot,
+      communityCards: pokerGame.communityCards
+    }
+  );
+  
+  // Apply bot action
+  pokerGame.applyAction(currentPlayer, decision.action, decision.amount);
+  
+  // Update UI
+  gameUI.updatePlayerSeat(currentPlayer, currentPlayer.seatNumber);
+  gameUI.updatePot(pokerGame.pot);
+  
+  // Move to next player
+  pokerGame.nextPlayer();
+  
+  // Continue loop
+  setTimeout(() => gameLoop(), 500);
+}
+
+/**
+ * Handle early end (only 1 player left)
+ */
+async function handleEarlyEnd() {
+  const winner = pokerGame.getEarlyWinner();
+  
+  if (winner) {
+    console.log(`\n🏆 ${winner.name} wins by default (others folded)`);
+    pokerGame.awardPot(winner);
+    
+    gameUI.showWinnerAnnouncement(winner, pokerGame.pot, 'Others folded');
+    gameUI.updatePlayerSeat(winner, winner.seatNumber);
+  }
+  
+  // Wait before starting new hand
+  setTimeout(() => {
+    startNewHand();
+  }, 3000);
+}
+
+/**
+ * Handle showdown
+ */
+async function handleShowdown() {
+  console.log('\n🃏 === SHOWDOWN ===');
+  
+  // Evaluate hands
+  const playerHands = [];
+  
+  pokerGame.activePlayers.forEach(player => {
+    if (player.isInHand()) {
+      const hand = evaluateHand(player.cards, pokerGame.communityCards);
+      player.handRank = hand.rank;
+      player.handDescription = hand.description;
+      
+      playerHands.push({ player, hand });
+      
+      console.log(`${player.name}: ${hand.description}`);
+    }
+  });
+  
+  // Determine winners
+  const winners = determineWinners(playerHands);
+  
+  // Split pot if multiple winners
+  const potShare = Math.floor(pokerGame.pot / winners.length);
+  
+  winners.forEach(({ player, hand }) => {
+    pokerGame.awardPot(player);
+    gameUI.showWinnerAnnouncement(player, potShare, hand.description);
+    gameUI.updatePlayerSeat(player, player.seatNumber);
+  });
+  
+  // Wait before starting new hand
+  setTimeout(() => {
+    startNewHand();
+  }, 5000);
 }
 
 // Run when DOM is ready
