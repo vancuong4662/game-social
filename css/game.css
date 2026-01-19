@@ -456,10 +456,6 @@ body {
     gap: 2rem;
   }
 
-  .sidebar {
-    order: -1;
-  }
-
   .sidebar-sticky {
     position: static;
   }
