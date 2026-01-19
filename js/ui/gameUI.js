@@ -14,6 +14,7 @@ export class GameUI {
     this.game = game;
     this.animationQueue = [];
     this.isAnimating = false;
+    this.logHistory = [];
   }
 
   // ============================================
@@ -179,6 +180,65 @@ export class GameUI {
     roundName.textContent = stateNames[state] || state;
   }
 
+  /**
+   * Show game commentary
+   * @param {string} message
+   * @param {boolean} highlight
+   */
+  showCommentary(message, highlight = false) {
+    const commentaryText = document.getElementById('commentaryText');
+    if (!commentaryText) return;
+
+    // Remove highlight class
+    commentaryText.classList.remove('highlight');
+    
+    // Update content
+    const span = commentaryText.querySelector('span');
+    
+    if (span) {
+      span.textContent = message;
+    }
+    
+    // Add highlight if needed
+    if (highlight) {
+      commentaryText.classList.add('highlight');
+    }
+    
+    // Trigger animation by removing and re-adding
+    commentaryText.style.animation = 'none';
+    setTimeout(() => {
+      commentaryText.style.animation = '';
+    }, 10);
+    
+    // Add to log history
+    const timestamp = new Date().toLocaleTimeString('vi-VN');
+    const logEntry = `[${timestamp}] ${message}`;
+    this.logHistory.push(logEntry);
+    
+    // Update log textarea if modal is open
+    this.updateLogDisplay();
+  }
+  
+  /**
+   * Update log display in textarea
+   */
+  updateLogDisplay() {
+    const logTextarea = document.getElementById('logTextarea');
+    if (!logTextarea) return;
+    
+    logTextarea.value = this.logHistory.join('\n');
+    // Auto scroll to bottom
+    logTextarea.scrollTop = logTextarea.scrollHeight;
+  }
+  
+  /**
+   * Clear log history
+   */
+  clearLogHistory() {
+    this.logHistory = [];
+    this.updateLogDisplay();
+  }
+
   // ============================================
   // ACTION BUTTONS
   // ============================================
@@ -233,7 +293,10 @@ export class GameUI {
    */
   disableActionButtons() {
     document.querySelectorAll('.btn-action').forEach(btn => {
-      btn.disabled = true;
+      // Don't disable Log button
+      if (!btn.classList.contains('btn-log')) {
+        btn.disabled = true;
+      }
     });
   }
 

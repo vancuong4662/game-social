@@ -307,6 +307,51 @@ function setupEventListeners() {
       betValue.textContent = e.target.value;
     });
   }
+  
+  // Log modal buttons
+  const btnLog = document.getElementById('btnLog');
+  const logModal = document.getElementById('logModal');
+  const closeLogModal = document.getElementById('closeLogModal');
+  const btnCloseLog = document.getElementById('btnCloseLog');
+  const btnClearLog = document.getElementById('btnClearLog');
+  
+  if (btnLog) {
+    btnLog.addEventListener('click', () => {
+      if (logModal) {
+        logModal.style.display = 'flex';
+        if (gameUI) gameUI.updateLogDisplay();
+      }
+    });
+  }
+  
+  if (closeLogModal) {
+    closeLogModal.addEventListener('click', () => {
+      if (logModal) logModal.style.display = 'none';
+    });
+  }
+  
+  if (btnCloseLog) {
+    btnCloseLog.addEventListener('click', () => {
+      if (logModal) logModal.style.display = 'none';
+    });
+  }
+  
+  if (btnClearLog) {
+    btnClearLog.addEventListener('click', () => {
+      if (gameUI && confirm('Bạn có chắc muốn xóa toàn bộ lịch sử?')) {
+        gameUI.clearLogHistory();
+      }
+    });
+  }
+  
+  // Close modal when clicking outside
+  if (logModal) {
+    logModal.addEventListener('click', (e) => {
+      if (e.target === logModal) {
+        logModal.style.display = 'none';
+      }
+    });
+  }
 }
 
 // Handle start game (reload to find new match)
@@ -432,6 +477,30 @@ function initializePokerGame() {
     console.log(`\n📍 State changed: ${state}`);
     gameUI.updateRoundName(state);
     gameUI.updateCommunityCards(gameState.communityCards);
+    
+    // Show commentary for state changes
+    let commentary = '';
+    switch(state) {
+      case GAME_STATE.PREFLOP:
+        commentary = 'Pre-Flop: Bắt đầu vòng cược đầu tiên';
+        break;
+      case GAME_STATE.FLOP:
+        commentary = 'Flop: 3 lá bài chung đã được mở! 🃏';
+        break;
+      case GAME_STATE.TURN:
+        commentary = 'Turn: Lá bài thứ 4 đã được mở';
+        break;
+      case GAME_STATE.RIVER:
+        commentary = 'River: Lá bài cuối cùng! Quyết định số phận 🎯';
+        break;
+      case GAME_STATE.SHOWDOWN:
+        commentary = 'Showdown: Đang so bài để tìm người chiến thắng...';
+        break;
+    }
+    
+    if (commentary) {
+      gameUI.showCommentary(commentary, state === GAME_STATE.RIVER);
+    }
   };
   
   pokerGame.onPotUpdate = (pot) => {
@@ -441,6 +510,34 @@ function initializePokerGame() {
   pokerGame.onPlayerAction = (player, action, amount) => {
     gameUI.showActionMessage(player.name, action, amount);
     gameUI.updatePlayerSeat(player, player.seatNumber);
+    
+    // Show commentary
+    let commentary = '';
+    const isPlayer = player.id === 'player';
+    const playerDisplay = isPlayer ? 'Bạn' : player.name;
+    
+    switch(action) {
+      case ACTIONS.FOLD:
+        commentary = `${playerDisplay} ${isPlayer ? 'đã' : 'vừa'} quyết định bỏ bài (fold)`;
+        break;
+      case ACTIONS.CHECK:
+        commentary = `${playerDisplay} ${isPlayer ? 'đã' : 'vừa'} check`;
+        break;
+      case ACTIONS.CALL:
+        commentary = `${playerDisplay} ${isPlayer ? 'đã' : 'vừa'} call $${amount}`;
+        break;
+      case ACTIONS.RAISE:
+        commentary = `${playerDisplay} ${isPlayer ? 'đã' : 'vừa'} raise lên $${amount}`;
+        break;
+      case ACTIONS.ALL_IN:
+        commentary = `${playerDisplay} ${isPlayer ? 'đã' : 'vừa'} ALL-IN với $${amount}! 🔥`;
+        break;
+      default:
+        commentary = `${playerDisplay} ${isPlayer ? 'đã' : 'vừa'} thực hiện ${action}`;
+    }
+    
+    const highlight = action === ACTIONS.ALL_IN || action === ACTIONS.RAISE;
+    gameUI.showCommentary(commentary, highlight);
   };
   
   console.log('✅ Game initialized successfully');
@@ -461,6 +558,9 @@ async function startNewHand() {
   
   // Reset UI
   gameUI.resetForNewHand();
+  
+  // Show commentary
+  gameUI.showCommentary('Ván mới bắt đầu! Đang chia bài...');
   
   // Start game
   const success = pokerGame.startNewHand();
@@ -589,6 +689,12 @@ async function handleEarlyEnd() {
     
     gameUI.showWinnerAnnouncement(winner, pokerGame.pot, 'Others folded');
     gameUI.updatePlayerSeat(winner, winner.seatNumber);
+    
+    // Show commentary
+    const isPlayer = winner.id === 'player';
+    const playerDisplay = isPlayer ? 'Bạn' : winner.name;
+    const winMessage = `🏆 ${playerDisplay} ${isPlayer ? 'đã' : 'vừa'} thắng vì tất cả người khác đã fold!`;
+    gameUI.showCommentary(winMessage, true);
   }
   
   // Wait before starting new hand
@@ -628,6 +734,12 @@ async function handleShowdown() {
     pokerGame.awardPot(player);
     gameUI.showWinnerAnnouncement(player, potShare, hand.description);
     gameUI.updatePlayerSeat(player, player.seatNumber);
+    
+    // Show winner commentary
+    const isPlayer = player.id === 'player';
+    const playerDisplay = isPlayer ? 'Bạn' : player.name;
+    const winMessage = `🏆 ${playerDisplay} ${isPlayer ? 'đã' : 'vừa'} thắng $${potShare} với ${hand.description}!`;
+    gameUI.showCommentary(winMessage, true);
   });
   
   // Wait before starting new hand

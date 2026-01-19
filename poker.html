@@ -165,6 +165,14 @@
 
       <!-- Action Panel (for player) -->
       <div class="action-panel">
+        <!-- Game Commentary -->
+        <div class="game-commentary">
+          <div class="commentary-text" id="commentaryText">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Chờ bắt đầu ván mới...</span>
+          </div>
+        </div>
+        
         <div class="action-buttons">
           <button class="btn-action btn-fold" disabled>
             <i class="fa-solid fa-xmark btn-icon"></i>
@@ -185,6 +193,10 @@
           <button class="btn-action btn-allin" disabled>
             <i class="fa-solid fa-fire btn-icon"></i>
             <span class="btn-text">All-in</span>
+          </button>
+          <button class="btn-action btn-log" id="btnLog">
+            <i class="fa-solid fa-list btn-icon"></i>
+            <span class="btn-text">Log</span>
           </button>
         </div>
         
@@ -233,6 +245,29 @@
       </div>
     </aside>
 
+  </div>
+
+  <!-- Log History Modal -->
+  <div id="logModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content log-modal">
+      <div class="modal-header">
+        <h3>Lịch Sử Diễn Biến</h3>
+        <button class="modal-close" id="closeLogModal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <textarea id="logTextarea" class="log-textarea" readonly></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal btn-clear" id="btnClearLog">
+          <i class="fa-solid fa-trash"></i> Xóa Log
+        </button>
+        <button class="btn-modal btn-close" id="btnCloseLog">
+          <i class="fa-solid fa-times"></i> Đóng
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- JavaScript -->
