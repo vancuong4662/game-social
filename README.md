@@ -62,49 +62,66 @@ Dự án này là một **game poker Texas Hold'em** chạy hoàn toàn trên tr
 ```
 /game-social
 │
+├── index.html                  # Landing page / Portal (✅ Done)
 ├── login.html                  # Trang đăng nhập
 ├── signup.html                 # Trang đăng ký
-├── game.html                   # Màn hình chơi game
+├── game.html                   # Trang chọn trò chơi (✅ Done)
+├── poker.html                  # Màn hình chơi poker (TODO)
+├── horse-racing.html           # Màn hình đua ngựa (TODO)
 │
 ├── css/
-│   ├── variables.css           # CSS custom properties (colors)
-│   ├── global.css              # Style chung
-│   ├── auth.css                # Đăng nhập/đăng ký
-│   ├── layout.css              # Bố cục bàn poker
-│   ├── cards.css               # Lá bài (úp/ngửa)
-│   ├── chips.css               # Chip, pot
-│   └── animation.css           # Animation chia bài, bet
+│   ├── variables.css           # CSS custom properties (colors) (✅ Done)
+│   ├── landing.css             # Landing page style (✅ Done)
+│   ├── auth.css                # Đăng nhập/đăng ký (✅ Done)
+│   ├── game.css                # Game selection page (✅ Done)
+│   ├── layout.css              # Bố cục bàn poker (TODO)
+│   ├── cards.css               # Lá bài (úp/ngửa) (TODO)
+│   ├── chips.css               # Chip, pot (TODO)
+│   └── animation.css           # Animation chia bài, bet (TODO)
 │
 ├── js/
+│   ├── game.js                 # Game page logic (✅ Done)
+│   ├── sidebar.js              # Sidebar navigation (✅ Done)
+│   │
 │   ├── core/
-│   │   ├── deck.js             # Bộ bài 52 lá
-│   │   ├── player.js           # Player model
-│   │   ├── game.js             # Game state machine
-│   │   ├── rules.js            # Luật poker, so bài
-│   │   └── handEvaluator.js    # Đánh giá bộ bài
+│   │   ├── deck.js             # Bộ bài 52 lá (TODO)
+│   │   ├── player.js           # Player model (TODO)
+│   │   ├── gameLogic.js        # Game state machine (TODO)
+│   │   ├── rules.js            # Luật poker, so bài (TODO)
+│   │   └── handEvaluator.js    # Đánh giá bộ bài (TODO)
 │   │
 │   ├── bot/
-│   │   ├── botManager.js       # Quản lý bot
-│   │   └── botAI.js            # Logic hành động bot
+│   │   ├── botManager.js       # Quản lý bot (TODO)
+│   │   └── botAI.js            # Logic hành động bot (TODO)
 │   │
 │   ├── storage/
 │   │   ├── userStorage.js      # CRUD user (✅ Done)
 │   │   ├── botStorage.js       # CRUD bot (✅ Done)
-│   │   └── gameStorage.js      # Lưu lịch sử game
+│   │   └── gameStorage.js      # Lưu lịch sử game (TODO)
 │   │
 │   ├── ui/
-│   │   ├── tableUI.js          # Giao diện bàn chơi
-│   │   ├── cardUI.js           # Hiển thị bài
-│   │   ├── actionUI.js         # Nút action (bet, fold...)
-│   │   └── notificationUI.js   # Thông báo, popup
+│   │   ├── tableUI.js          # Giao diện bàn chơi (TODO)
+│   │   ├── cardUI.js           # Hiển thị bài (TODO)
+│   │   ├── actionUI.js         # Nút action (bet, fold...) (TODO)
+│   │   └── notificationUI.js   # Thông báo, popup (TODO)
 │   │
 │   └── main.js                 # Entry point
 │
 ├── static/
+│   ├── img/
+│   │   ├── banner1.jpg         # Banner landing page (✅ Done)
+│   │   ├── banner2.jpg         # Banner game page (✅ Done)
+│   │   ├── banner-poker.jpg    # Banner poker game (✅ Done)
+│   │   ├── banner-horse-racing.jpg # Banner horse racing (✅ Done)
+│   │   └── icon/
+│   │       ├── poker.png       # Icon poker game (✅ Done)
+│   │       └── horse-racing.png # Icon horse racing (✅ Done)
+│   │
 │   ├── json/
-│   │   └── bots.json           # Data 30 bots
+│   │   └── bots.json           # Data 30 bots (✅ Done)
 │   │
 │   └── avatars/
+│       ├── default.png         # Avatar mặc định
 │       ├── bot_001.png         # Avatar bot (theo ID)
 │       ├── bot_002.png
 │       └── ...
@@ -193,17 +210,61 @@ Game sử dụng bảng màu tối, sang trọng phù hợp với không khí po
   --radius-xl: 16px;
 }
 ```
+ (Landing page)
+2. Click "Click to Play" để chuyển đến trang login
+3. Đăng ký tài khoản mới hoặc đăng nhập
+4. Chọn trò chơi từ trang `game.html`
+5. Bắt đầu chơi!
 
----
+### Hoặc chạy với Live Server (khuyến nghị)
+```bash
+# Nếu dùng VS Code
+# Cài extension: Live Server
+# Right-click index.html → Open with Live Server
+```
 
-## 🚀 Hướng dẫn chạy dự án
+### Luồng navigation
+```
+indeLanding Page (index.html) ✅
+- Hero banner với background image (4:3 ratio)
+- Logo và brand "Game Social"
+- CTA button "Click to Play" → login.html
+- 3 features highlight
+- Background animation với card suits
+- Fully responsive
 
-### Yêu cầu
-- Trình duyệt hiện đại (Chrome, Firefox, Edge, Safari)
-- Không cần cài đặt thêm gì
+### Game Selection Page (game.html) ✅
+- Hero banner với logo
+- 2-column layout (2/3 games + 1/3 sidebar)
+- Game cards với:
+  - Background image riêng
+  - Icon từ static/img/icon/
+  - Mô tả game
+  - Statistics (số người chơi)
+  - Button "Chơi Ngay" → link đến game
+- Sidebar navigation với:
+  - Active state management
+  - User info card (avatar, username, balance)
+  - Menu items (Games, Profile, Leaderboard, etc.)
+  - Logout functionality
+- Responsive (sidebar chuyển lên trên trên mobile)
 
-### Chạy game
-1. Mở file `index.html` bằng trình duyệt
+### Hệ thống tài khoản
+
+#### Đăng ký
+- Username (unique)
+- Password (mã hóa đơn giản)
+- Nhận $100 ban đầu
+
+#### Đăng nhập
+- Xác thực username/password
+- Tự động login nếu đã đăng nhập trước
+- Redirect to game.html sau khi login
+
+#### User Session
+- Load từ `poker_userSession` trong LocalStorage
+- Display username và balance
+- Auto redirect nếu chưa loginệt
 2. Đăng ký tài khoản mới hoặc đăng nhập
 3. Bắt đầu chơi!
 
@@ -251,10 +312,14 @@ Game sử dụng bảng màu tối, sang trọng phù hợp với không khí po
 ```
 START → Blind → Pre-Flop → Flop → Turn → River → Showdown → END
                     ↓        ↓       ↓      ↓         ↓
-                  Betting  Betting Betting Betting  So bài
-```
-
-### Lưu trữ dữ liệu
+             Foundation & UI ✅ (Hoàn thành một phần)
+- [x] Cấu trúc dự án
+- [x] CSS variables (color palette)
+- [x] Landing page (index.html)
+- [x] Game selection page (game.html)
+- [x] Sidebar navigation với active state
+- [x] User info display từ LocalStorage
+- [x] Responsive design (mobile/tablet
 
 Game sử dụng **LocalStorage** để lưu trữ toàn bộ dữ liệu:
 
@@ -269,13 +334,16 @@ Chi tiết cấu trúc database xem tại: [database-overview.md](docs/database-
 - Dữ liệu lưu cục bộ trên trình duyệt
 - Không cần server backend
 - Bot data được init từ `static/json/bots.json` lần đầu đăng nhập
-- Avatar bot load theo pattern: `static/avatars/{bot_id}.png`
-
----
-
-## 🗺️ Lộ trình phát triển
-
-### Phase 1: Core Game ✅ (Đang làm)
+- Avatar bot Game UI/UX
+- [x] Landing page với hero banner
+- [x] Game selection cards với images
+- [x] Sidebar navigation system
+- [x] User info card
+- [ ] Layout bàn poker
+- [ ] Card display (úp/ngửa)
+- [ ] Chip & pot animation
+- [ ] Action buttons (custom colors)
+- [ ] Notification system (Toast/Modal)
 - [ ] Cấu trúc dự án
 - [ ] Setup Bootstrap 5 + Font Awesome 6
 - [ ] CSS variables (color palette)
